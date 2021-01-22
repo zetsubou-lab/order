@@ -1,45 +1,45 @@
 #!/usr/bin/env bash
-#ç¼–è¯‘+éƒ¨ç½²orderç«™ç‚¹
-
-#éœ€è¦é…ç½®å¦‚ä¸‹å‚æ•°
-# é¡¹ç›®è·¯å¾„, åœ¨Execute Shellä¸­é…ç½®é¡¹ç›®è·¯å¾„, pwd å°±å¯ä»¥è·å¾—è¯¥é¡¹ç›®è·¯å¾„
-# export PROJ_PATH=è¿™ä¸ªjenkinsä»»åŠ¡åœ¨éƒ¨ç½²æœºå™¨ä¸Šçš„è·¯å¾„
-
-# è¾“å…¥ä½ çš„ç¯å¢ƒä¸Štomcatçš„å…¨è·¯å¾„
-# export TOMCAT_APP_PATH=tomcatåœ¨éƒ¨ç½²æœºå™¨ä¸Šçš„è·¯å¾„
-
-### base å‡½æ•°
+#±àÒë+²¿ÊğÏîÄ¿Õ¾µã
+ 
+#ĞèÒªÅäÖÃÈçÏÂ²ÎÊı
+# ÏîÄ¿Â·¾¶, ÔÚExecute ShellÖĞÅäÖÃÏîÄ¿Â·¾¶, pwd ¾Í¿ÉÒÔ»ñµÃ¸ÃÏîÄ¿Â·¾¶
+export PROJ_PATH=/usr/java/tomcat/apache-tomcat-9.0.41/webapps/jenkins/workspace
+ 
+# ÊäÈëÄãµÄ»·¾³ÉÏtomcatµÄÈ«Â·¾¶
+export TOMCAT_APP_PATH=/usr/java/tomcat/apache-tomcat-9.0.41
+ 
+### base º¯Êı
 killTomcat()
 {
-    pid=`ps -ef|grep tomcat|grep java|awk '{print $2}'`
-    echo "tomcat Id list :$pid"
-    if [ "$pid" = "" ]
-    then
-      echo "no tomcat pid alive"
-    else
-      kill -9 $pid
-    fi
+    #pid=`ps -ef|grep tomcat|grep java|awk '{print $2}'`
+    #echo "tomcat Id list :$pid"
+    #if [ "$pid" = "" ]
+    #then
+    #  echo "no tomcat pid alive"
+    #else
+    #  kill -9 $pid
+    #fi
+    #ÉÏÃæ×¢ÊÍµÄ»òÕßÏÂÃæµÄ
+    cd $TOMCAT_APP_PATH/bin
+    sh shutdown.sh
 }
 cd $PROJ_PATH/order
 mvn clean install
-
-# åœtomcat
+ 
+# Í£tomcat
 killTomcat
-
-# åˆ é™¤åŸæœ‰å·¥ç¨‹
+ 
+# É¾³ıÔ­ÓĞ¹¤³Ì
 rm -rf $TOMCAT_APP_PATH/webapps/ROOT
 rm -f $TOMCAT_APP_PATH/webapps/ROOT.war
 rm -f $TOMCAT_APP_PATH/webapps/order.war
-
-# å¤åˆ¶æ–°çš„å·¥ç¨‹
+ 
+# ¸´ÖÆĞÂµÄ¹¤³Ìµ½tomcatÉÏ
 cp $PROJ_PATH/order/target/order.war $TOMCAT_APP_PATH/webapps/
-
+ 
 cd $TOMCAT_APP_PATH/webapps/
 mv order.war ROOT.war
-
-# å¯åŠ¨Tomcat
+ 
+# Æô¶¯Tomcat
 cd $TOMCAT_APP_PATH/
 sh bin/startup.sh
-
-
-
